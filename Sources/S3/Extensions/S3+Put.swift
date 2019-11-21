@@ -16,7 +16,7 @@ extension S3 {
     // MARK: Upload
     
     /// Upload file to S3
-    public func put(file: File.Upload, headers: [String: String], on container: Container) throws -> EventLoopFuture<File.Response> {
+    public func put(file: File.Upload, headers: [String: String], on container: Container, payload: Payload? = nil) throws -> EventLoopFuture<File.Response> {
         let builder = urlBuilder(for: container)
         let url = try builder.url(file: file)
         
@@ -25,7 +25,7 @@ extension S3 {
         var awsHeaders: [String: String] = headers
         awsHeaders["content-type"] = file.mime.description
         awsHeaders["x-amz-acl"] = file.access.rawValue
-        let headers = try signer.headers(for: .PUT, urlString: url.absoluteString, headers: awsHeaders, payload: Payload.bytes(file.data))
+        let headers = try signer.headers(for: .PUT, urlString: url.absoluteString, headers: awsHeaders, payload: payload ?? Payload.bytes(file.data))
         
         let request = Request(using: container)
         request.http.method = .PUT
