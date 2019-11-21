@@ -15,6 +15,10 @@ extension S3 {
     
     // MARK: Upload
     
+    public func put(file: File.Upload, headers: [String: String], on container: Container) throws -> EventLoopFuture<File.Response> {
+        return try put(file: file, headers: headers, on: container)
+    }
+    
     /// Upload file to S3
     public func put(file: File.Upload, headers: [String: String], on container: Container, payload: Payload? = nil) throws -> EventLoopFuture<File.Response> {
         let builder = urlBuilder(for: container)
